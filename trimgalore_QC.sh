@@ -1,4 +1,3 @@
-Trimming 
 #!/bin/bash
 #SBATCH --job-name=OV_T1F1-trim
 #SBATCH --nodes=1
