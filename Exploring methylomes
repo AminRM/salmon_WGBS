@@ -107,10 +107,13 @@ PitT4.2 <- fread('Pit-T4F4.CG_positions.min10x.tsv')
 setnames(PitT4.2, c("chr", "pos", "N", "X"))
 head(PitT4.2)
 max()
+
+#extract methylated counts only into a matrix
 N_meth = cbind(OvaryT1.1$X, OvaryT1.2$X, OvaryT4.1$X, OvaryT4.2$X,LiverT1.1$X, LiverT1.2$X, LiverT4.1$X, LiverT4.2$X,PitT1.1$X, PitT1.2$X, PitT4.1$X, PitT4.2$X)
 dim(N_meth)
 head(N_meth)
 View(N_meth)
+#extract the coverage data
 N_covered = cbind(OvaryT1.1$N, OvaryT1.2$N, OvaryT4.1$N, OvaryT4.2$N,LiverT1.1$N, LiverT1.2$N, LiverT4.1$N, LiverT4.2$N,PitT1.1$N, PitT1.2$N, PitT4.1$N, PitT4.2$N)
 dim(N_covered)
 head(N_covered)
@@ -121,7 +124,7 @@ hist(avg_meth)
 max(avg_meth)
 min(avg_meth)
 
-
+#use DSS to make the BS object where you can extract methylation data for samples culstering and correlation analyses
 
 library(DSS)
 require(bsseq)
@@ -134,24 +137,22 @@ head(meth_levels)
 meth_levels_noNAN <- meth_levels[complete.cases(meth_levels), ]
 head(meth_levels_noNAN)
 dim(meth_levels_noNAN)
+
+#use the Rpackage corrplot for plotting correlation:
 install.packages("corrplot")
 library(corrplot)
-
-
 M <- cor(meth_levels_noNAN)
 corrplot(M, method = "number")
 corrplot(M, order = "hclust", addrect = 3)
 corrplot.mixed(M)
-
+#write the methylated counts into a text file
 write.table(meth_levels_noNAN, "M-levels.txt", sep="\t")
-getwd()
-library(reshape2)
-melted_cormat <- melt(meth_levels_noNAN)
-head(melted_cormat)
 
-cor(meth_levels_noNAN)
-pairs(meth_levels_noNAN)
-library(ggplot2)
-ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + 
-  geom_tile()
+#Clustering analyses:
+M <- cor(meth_levels_noNAN)
+dissimilarity <- 1 - M
+distance <- as.dist(dissimilarity)
+round(distance,4)
+plot(hclust(distance), main="CpG Methylation Clustering Dendrogram", xlab="WGBS Library Distance")
+
 
