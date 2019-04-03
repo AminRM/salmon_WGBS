@@ -1,3 +1,4 @@
+#create the R script DSS.R, open nano and write the following:
 setwd("/flush2/moh034/CGmap_filles")
 library(DSS)
 require(bsseq)
@@ -26,3 +27,18 @@ head(dmrs.ov)
 dim(dmrs.ov)
 pdf("ovary-46_osbpl2dmr.pdf")
 showOneDMR(dmrs.ov[46,], BSobjovary)
+
+#create the bash script
+
+#!/bin/bash
+#SBATCH --job-name=OV-DSS_r
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mail-type=ALL
+#SBATCH --mem=8gb
+#SBATCH --time=6:00:00
+#SBATCH --mail-user=amin.esmai@csiro.au
+$SLURM_SUBMIT_DIR
+
+module load R/3.5.0
+Rscript DSS.R
