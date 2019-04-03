@@ -155,4 +155,24 @@ distance <- as.dist(dissimilarity)
 round(distance,4)
 plot(hclust(distance), main="CpG Methylation Clustering Dendrogram", xlab="WGBS Library Distance")
 
+#PCA-plots
+pca_data=prcomp(t(meth_levels_noNAN))
+pca_data_perc=round(100*pca_data$sdev^2/sum(pca_data$sdev^2),1)
+df_pca_data = data.frame(PC1 = pca_data$x[,1], PC2 = pca_data$x[,2], sample = colnames(meth_levels_noNAN), condition = rep(c("OC","OM","LC","LM","PC","PM"),each=2))
+head(df_pca_data)
+            PC1       PC2 sample condition
+OC1   -9.928113 186.56286    OC1        OC
+OC2  -13.110452 151.85500    OC2        OC
+OM1  -19.341345 128.90450    OM1        OM
+OM2  -34.633619  92.37804    OM2        OM
+LC1 -131.462337 -83.21228    LC1        LC
+LC2 -125.767622 -84.55875    LC2        LC
+library(ggplot2)
+ggplot(df_pca_data, aes(PC1,PC2, color = sample))+ geom_point(size=8)+ labs(x=paste0("PC1 (",pca_data_perc[1],")"), y=paste0("PC2 (",pca_data_perc[2],")"))
+plot <- ggplot(df_pca_data, aes(PC1,PC2, color = sample))+ geom_point(size=8)+ labs(x=paste0("PC1 (",pca_data_perc[1],")"), y=paste0("PC2 (",pca_data_perc[2],")"))
+ggplot(df_pca_data, aes(PC1,PC2, color = condition))+
++   geom_point(size=8)+
+
+plot2 <- ggplot(df_pca_data, aes(PC1,PC2, color = condition))+geom_point(size=8)+  labs(x=paste0("PC1 (",pca_data_perc[1],")"), y=paste0("PC2(",pca_data_perc[2],")"))
+
 
