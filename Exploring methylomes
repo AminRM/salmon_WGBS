@@ -1,1 +1,18 @@
+I used CGmaptools, to explore the methylome results before running differential methylation analyses
 
+
+
+(base) moh034@pearcey-login:/flush2/moh034/OV-T4F4> cat OV-T4F4-mstat.sh
+#!/bin/bash
+#SBATCH --job-name=OV-T4F4-Mstat
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mail-type=ALL
+#SBATCH --mem=4gb
+#SBATCH --time=72:00:00
+#SBATCH --mail-user=amin.esmai@csiro.au
+$SLURM_SUBMIT_DIR
+
+module load python/2.7.13
+
+zcat OV-T4F4.CGmap.gz | /flush2/moh034/cgmaptools-0.1.1/cgmaptools mstat -c 10 -f pdf -p OV-T4F4.mstat -t OV-T4F4.mstat > OV-T4F4.mstat_CG.log
