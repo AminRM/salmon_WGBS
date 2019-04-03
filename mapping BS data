@@ -20,6 +20,7 @@ split -l 80000000 Pit_T4F2_val_R1.fq Pit_T4F2_val_R1
 split -l 80000000 Pit_T4F2_val_R2.fq Pit_T4F2_val_R2
 
 #Step2: prepare reference for mapping 
+
 cat index-bsseeker.sh
 #!/bin/bash
 #SBATCH --job-name=2index-ref
@@ -33,9 +34,7 @@ $SLURM_SUBMIT_DIR
 
 module load python
 module load bowtie/2.2.9/
-
 python BSseeker2-master/bs_seeker2-build.py -f GCA_000233375.4_ICSASG_v2_genomic.fna --aligner bowtie2
-
 
 
 #Step3: map all the samples using that bash script and save that as map-bsseeker.sh
@@ -55,7 +54,7 @@ python /flush2/moh034/BSseeker2-master/bs_seeker2-align.py -1 /flush1/moh034/WGB
 
 in the terminal type: sbatch map-bsseeker.sh 
 
-merge bam files for each sample
+#Step4: merge bam files for each sample and sort
 #!/bin/bash
 #SBATCH --job-name=OV-T1F1-MS
 #SBATCH --nodes=1
@@ -70,7 +69,8 @@ module load samtools/1.9.0
 samtools merge -@ ${SLURM_NTASKS} OV-T1F1_merged.bam OV-T1F1-aa.bam OV-T1F1-ab.bam OV-T1F1-ac.bam OV-T1F1-ad.bam OV-T1F1-ae.bam
 samtools sort -@ ${SLURM_NTASKS} -T temp -O BAM OV-T1F1_merged.bam -o OV-T1F1_merged_sorted.bam
 
-#Step4: check and remove PCR duplicates 
+#Step5: check and remove PCR duplicates 
+
 #!/bin/bash
 #SBATCH --job-name=OV-T4F4-pcr
 #SBATCH --nodes=1
@@ -85,7 +85,7 @@ export OMP_NUM_THREADS=$SLURM_NTASKS_PER_NODE
 module load picard
 java -Xmx8g -jar /flush2/moh034/picard.jar MarkDuplicates I=OV-T4F4_merged_sorted.bam O=OV-T4F4_filtered.bam M=dup_metrics.txt REMOVE_DUPLICATES=true AS=true SORTING_COLLECTION_SIZE_RATIO=0.10
 
-Step5: methylation caling within BS-Seeker2
+Step6: methylation caling within BS-Seeker2
 
 (base) moh034@pearcey-login:/flush2/moh034/OV-T4F4> cat OV-T4F4-MCall.sh
 #!/bin/bash
