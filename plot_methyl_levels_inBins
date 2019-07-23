@@ -1,0 +1,112 @@
+We need to get average CpG methylation levels in 1kb bins, use the following BASH script that uses the mbin function within cgmaptools to calculate 
+average methylation in 1kb bins from the CGmap file that has methylation levels at a single base resolution 
+
+#!/bin/bash
+#SBATCH --job-name=cg-mbin-OV
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mail-type=ALL
+#SBATCH --mem=4gb
+#SBATCH --time=72:00:00
+#SBATCH --mail-user=amin.esmai@csiro.au
+$SLURM_SUBMIT_DIR
+module load python/2.7.13
+zcat OV-T1F1.CGmap.gz | /flush2/moh034/cgmaptools-0.1.1/cgmaptools mbin -C CG -B 1000 -c10 -f pdf -p OV-T1F1.CG.mbin -t OV-T1F1.CG.mbin > OV-T1F1.CG.mbin.log
+zcat OV-T1F3.CGmap.gz | /flush2/moh034/cgmaptools-0.1.1/cgmaptools mbin -C CG -B 1000 -c10 -f pdf -p OV-T1F3.CG.mbin -t OV-T1F3.CG.mbin > OV-T1F3.CG.mbin.log
+zcat OV-T4F3.CGmap.gz | /flush2/moh034/cgmaptools-0.1.1/cgmaptools mbin -C CG -B 1000 -c10 -f pdf -p OV-T4F3.CG.mbin -t OV-T4F3.CG.mbin > OV-T1F1.CG.mbin.log
+zcat OV-T4F4.CGmap.gz | /flush2/moh034/cgmaptools-0.1.1/cgmaptools mbin -C CG -B 1000 -c10 -f pdf -p OV-T4F4.CG.mbin -t OV-T4F4.CG.mbin > OV-T1F1.CG.mbin.log
+
+Then use R, to extract data for plotting using the R package "vioplot"
+
+install.packages('sm')
+install.packages('vioplot')
+library(vioplot)
+library(sm)
+require(data.table)
+
+LC1data <- fread('LV-T1F3.CG.mbin.log', na.strings="na")
+head(LC1data)
+dim(LC1data)
+setnames(LC1data, c("chr", "pos1", "bin", "M"))
+LC1datanoNA <-na.omit(LC1data)
+head(LC1datanoNA)
+dim(LC1datanoNA)
+
+LC1 <- LC1datanoNA$M
+head(LC1)
+LC2data <- fread('LV-T1F4.CG.mbin.log', na.strings="na")
+setnames(LC2data, c("chr", "pos1", "bin", "M"))
+LC2noNA <-na.omit(LC2data)
+LC2 <- LC2noNA$M
+head(LC2)
+
+LM1data <- fread('LV-T4F3.CG.mbin.log', na.strings="na")
+setnames(LM1data, c("chr", "pos1", "bin", "M"))
+LM1noNA <-na.omit(LM1data)
+LM1 <- LM1noNA$M
+head(LM1)
+
+LM2data <- fread('LV-T4F4.CG.mbin.log', na.strings="na")
+setnames(LM2data, c("chr", "pos1", "bin", "M"))
+LM2noNA <-na.omit(LM2data)
+LM2 <- LM2noNA$M
+head(LM2)
+
+vioplot(LC1,LC2,LM1,LM2,names=c("LC1","LC2","LM1","LM2"), col=c("gold","gold","grey","grey"))
+
+OC1data <- fread('OV-T1F1.CG.mbin.log', na.strings="na")
+setnames(OC1data, c("chr", "pos1", "bin", "M"))
+OC1datanoNA <-na.omit(OC1data)
+head(OC1datanoNA)
+OC1 <- OC1datanoNA$M
+head(OC1)
+
+OC2data <- fread('OV-T1F3.CG.mbin.log', na.strings="na")
+setnames(OC2data, c("chr", "pos1", "bin", "M"))
+OC2datanoNA <-na.omit(OC2data)
+head(OC2datanoNA)
+OC2 <- OC2datanoNA$M
+head(OC2)
+
+OM1data <- fread('OV-T4F3.CG.mbin.log', na.strings="na")
+setnames(OM1data, c("chr", "pos1", "bin", "M"))
+OM1noNA <-na.omit(OM1data)
+OM1 <- OM1noNA$M
+head(OM1)
+
+OM2data <- fread('OV-T4F4.CG.mbin.log', na.strings="na")
+setnames(OM2data, c("chr", "pos1", "bin", "M"))
+OM2noNA <-na.omit(OM2data)
+OM2 <- OM2noNA$M
+head(OM2)
+
+vioplot(OC1,OC2,OM1,OM2,names=c("OC1","OC2","OM1","OM2"), col=c("gold","gold","grey","grey"))
+
+PC1data <- fread('Pit-T1F3.CG.mbin.log', na.strings="na")
+setnames(PC1data, c("chr", "pos1", "bin", "M"))
+PC1NO <-na.omit(PC1data)
+PC1 <- PC1NO$M
+head(PC1)
+
+PC2data <- fread('Pit-T1F4.CG.mbin.log', na.strings="na")
+setnames(PC2data, c("chr", "pos1", "bin", "M"))
+PC2NO <-na.omit(PC2data)
+PC2 <- PC2NO$M
+head(PC2)
+
+PM1data <- fread('Pit-T4F2.CG.mbin.log', na.strings="na")
+setnames(PM1data, c("chr", "pos1", "bin", "M"))
+PM1NO <-na.omit(PM1data)
+PM1 <- PM1NO$M
+head(PM1)
+
+PM2data <- fread('Pit-T4F4.CG.mbin.log', na.strings="na")
+setnames(PM2data, c("chr", "pos1", "bin", "M"))
+PM2NO <-na.omit(PM2data)
+PM2 <- PM2NO$M
+head(PM2)
+
+vioplot(PC1,PC2,PM1,PM2,names=c("PC1","PC2","PM1","PM2"), col=c("gold","gold","grey","grey"))
+
+vioplot(PC1,PC2,PM1,PM2,OC1,OC2,OM1,OM2,LC1,LC2,LM1,LM2, names=c("PC1","PC2","PM1","PM2","OC1","OC2","OM1","OM2","LC1","LC2","LM1","LM2"), col=c("gold","gold","grey","grey", "gold","gold","grey","grey", "gold","gold","grey","grey"))
+
