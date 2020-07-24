@@ -3,8 +3,6 @@ average methylation in 1kb bins from the CGmap file that has methylation levels 
 
 #!/bin/bash
 #SBATCH --job-name=cg-mbin-OV
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
 #SBATCH --mail-type=ALL
 #SBATCH --mem=4gb
 #SBATCH --time=72:00:00
