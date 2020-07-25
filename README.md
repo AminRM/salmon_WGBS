@@ -13,10 +13,12 @@ the following bash scripts were used to map WGBS to the Atlantic salmon referenc
 
 4- sortBAM.sh & pcrDUPremoval.sh were used to sort alignment files using SAMTOOLS and remove PCR duplicates using Picard tools 
 
-5- MethCalling.sh was used to call methylation levels for all CG contexts using bs_seeker2-call_methylation.py within BSseker2 
+5- MethCalling.sh was used to call methylation levels (CGmap files) for all CG contexts using bs_seeker2-call_methylation.py within BSseker2 
 
 6- Exploring methylomes describes exploratory analyses for the methyolme data and extraction of methylation data at CpG sites 
 
 7- DSS_CpG_Methylation_analysis.R for differential CpG methylation analyses using the R package DSS 
 
 8- geneScooperBed.pl and exonScooperBed.pl: perl scripts to assign DMRs to genomic locations genic (cds, intron), up-, down-stream of TSS. 
+
+9- GO_clusterProfiler.R for gene ontology (GO) enrichment among differentially methylated genes (DMGs)
