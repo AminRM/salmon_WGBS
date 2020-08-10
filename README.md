@@ -1,9 +1,9 @@
-# Salmon DNA methylomes (WGBS analyses) during maturation 
-Mohamed et al (2020) Integrated transcriptome, DNA methylome and chromatin state accessibility landscapes reveal regulators of Atlantic salmon maturation
+# Salmon multitissue DNA methylomes (WGBS analyses) during maturation 
+Mohamed et al (in prep) Integrated transcriptome, DNA methylome and chromatin state accessibility landscapes reveal regulators of Atlantic salmon maturation
 
-this repository contains scripts for WGBS data QC, genome mapping, methylation calling using BSseeker2, ethylome exploratory analyses and differential CpG methylation from WGBS data using the R package DSS. 
+this repository contains scripts for analysing DNA methylomes from 12 WGBS libraries obtained from 3 salmon tissues (pituitary gland, ovary and liver) collected before and after initiating puberty via photoperiod manipulation. 
 
-the following scripts were used to perform dataQC, map WGBS to the Atlantic salmon reference genome ICSASG_v2 (Lien et al., 2016), perform post-mapping QC, call methylation levels, perform differential methylation analyses. 
+the following scripts were used to perform dataQC, map WGBS to the Atlantic salmon reference genome ICSASG_v2 (Lien et al., 2016), perform post-mapping QC, call methylation levels, perform differential methylation analyses using the R package DSS. 
 
 WGBS data QC:
 trimgalore_QC.sh was used to filter bases (Q scores < 30) and remove both universal and indexed adapter sequences
